@@ -63,34 +63,47 @@ class ImagePopup extends React.Component {
         }
     }
 
-    render(){
+    render() {
         const { error, loading, expandThumb } = this.state;
         const { feature, task } = this.props;
-
+      
         const downloadImageLink = `/api/projects/${task.project}/tasks/${task.id}/images/download/${feature.properties.filename}`;
-        const downloadShotsLink =  `/api/projects/${task.project}/tasks/${task.id}/download/shots.geojson`;
+        const downloadShotsLink = `/api/projects/${task.project}/tasks/${task.id}/download/shots.geojson`;
         const imageUrl = expandThumb ? this.getThumbUrl(999999999) : this.getThumbUrl(320);
         const assetDownload = AssetDownloads.only(["shots.geojson"])[0];
-
-        return (<div className="image-popup">
+      
+        // Extract filename without extension
+        const filenameWithoutExt = feature.properties.filename.split('.').slice(0, -1).join('.');
+      
+        // Construct crack detection link
+        const crackDetectionLink = `https://bayonneraw.boshang.online/index.html?image=${filenameWithoutExt}`;
+      
+        return (
+          <div className="image-popup">
             <div className="title" title={feature.properties.filename}>{feature.properties.filename}</div>
-            {loading ? <div><i className="fa fa-circle-notch fa-spin fa-fw"></i></div>
-            : ""}
-            {error !== "" ? <div style={{marginTop: "8px"}}>{error}</div>
-            : [
-                <div key="image" className={`image ${expandThumb ? "fullscreen" : ""}`} style={{marginTop: "8px"}}  ref={(domNode) => { this.image = domNode;}}>
-                    {loading && expandThumb ? <div><i className="fa fa-circle-notch fa-spin fa-fw"></i></div> : ""}
-                    <a onClick={this.onImgClick} href="javascript:void(0);" title={feature.properties.filename}><img style={{borderRadius: "4px"}} src={imageUrl} onLoad={this.imageOnLoad} onError={this.imageOnError} /></a>
-                </div>,
-                <div key="download-image">
-                    <a href={downloadImageLink}><i className="fa fa-image"></i> {_("Download Image")}</a>
-                </div>
+            {loading ? <div><i className="fa fa-circle-notch fa-spin fa-fw"></i></div> : ""}
+            {error !== "" ? <div style={{ marginTop: "8px" }}>{error}</div> : [
+              <div key="image" className={`image ${expandThumb ? "fullscreen" : ""}`} style={{ marginTop: "8px" }} ref={(domNode) => { this.image = domNode; }}>
+                {loading && expandThumb ? <div><i className="fa fa-circle-notch fa-spin fa-fw"></i></div> : ""}
+                <a onClick={this.onImgClick} href="javascript:void(0);" title={feature.properties.filename}><img style={{ borderRadius: "4px" }} src={imageUrl} onLoad={this.imageOnLoad} onError={this.imageOnError} /></a>
+              </div>,
+              <div key="download-image">
+                <a href={downloadImageLink}><i className="fa fa-image"></i> {_("Download Image")}</a>
+              </div>,
+              // New Crack Detection button
+              <div key="crack-detection">
+                <a href={crackDetectionLink} target="_blank" rel="noopener noreferrer">
+                  <i className="fa fa-wrench"></i> {_("Crack Detection")}
+                </a>
+              </div>
             ]}
             <div>
-                <a href={downloadShotsLink}><i className={assetDownload.icon}></i> {assetDownload.label} </a>
+              <a href={downloadShotsLink}><i className={assetDownload.icon}></i> {assetDownload.label} </a>
             </div>
-        </div>);
-    }
+          </div>
+        );
+      }
+      
 }
 
 export default ImagePopup;
