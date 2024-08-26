@@ -52148,6 +52148,51 @@
 			return Math.abs(this.scale.x * this.scale.y * this.scale.z);
 		}
 
+		async getCrack() {
+			return new Promise((resolve, reject) => {
+			  clearTimeout(this.debounceTimer);
+		
+			  if (this.abortController) {
+				this.abortController.abort(); // Cancel the previous API request
+			  }
+		
+			  this.abortController = new AbortController(); // Create a new AbortController for the current request
+			  const signal = this.abortController.signal;
+		
+			  this.debounceTimer = setTimeout(async () => {
+				const url = 
+				"https://laimatt.boshang.online/analyze_crack?" +
+				"x=" + this.position.x + 
+				"&y=" + this.position.y + 
+				"&z=" + this.position.z + 
+				"&length=" + this.scale.x + 
+				"&width=" + this.scale.y + 
+				"&height=" + this.scale.z + 
+				"&html_file=" + encodeURIComponent(window.location.href);
+		
+				try {
+				  const response = await fetch(url, { signal }); // Pass the AbortSignal to the fetch request
+				  const data = await response.text(); // Read the response as text
+		
+				  if (data.trim() !== "") { // Check if the response is not empty
+					const crack = parseFloat(data.trim()); // Parse the text to a number
+					console.log(crack.toFixed(2)); // Log the latest stable value
+					resolve(crack); // Resolve the promise with the calculated crack length
+				  } else {
+					throw new Error("Empty response received");
+				  }
+				} catch (error) {
+				  if (error.name === "AbortError") {
+					console.log("API request aborted"); // Handle the aborted request
+				  } else {
+					reject(error); // Reject the promise with the error
+				  }
+				}
+		
+			  }, 500); // Adjust the debounce delay as needed (in milliseconds)
+			});
+		  }
+
 	};
 
 	class SphereVolume extends Volume{
@@ -74590,6 +74635,9 @@ ENDSEC
 				<br>
 				<span style="font-weight: bold">Volume: </span>
 				<span id="measurement_volume"></span>
+				<br>
+				<span style="font-weight: bold">Total Crack Length: </span>
+				<span id="measurement_crack"></span>
 
 				<!--
 				<li>
@@ -74899,8 +74947,21 @@ ENDSEC
 
 			{
 				let elVolume = this.elContent.find(`#measurement_volume`);
+				let elCrack = this.elContent.find(`#measurement_crack`);
 				let volume = this.measurement.getVolume();
 				elVolume.html(Utils.addCommas(volume.toFixed(2)));
+
+				// Handle getCrack asynchronously
+				elCrack.html("Calculating..."); // Show "Calculating..." message
+				this.measurement
+				.getCrack()
+				.then((crack) => {
+					elCrack.html(Utils.addCommas(crack.toFixed(2))); // Update the UI with the crack length
+				})
+				.catch((error) => {
+					console.error("Error updating volume panel:", error);
+					elCrack.html("Error"); // Show "Error" message if an error occurs
+				});
 			}
 
 			this.elCheckClip.prop("checked", this.measurement.clip);
@@ -79143,6 +79204,21 @@ ENDSEC
 
 					let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
 					let jsonNode = measurementsRoot.children.find(child => child.data.uuid === measurement.uuid);
+					$.jstree.reference(jsonNode.id).deselect_all();
+					$.jstree.reference(jsonNode.id).select_node(jsonNode.id);
+				}
+			));
+
+			// Crack
+			elToolbar.append(this.createToolIcon(
+				Potree.resourcePath + '/icons/crack3.svg',
+				'[title]tt.crack_measurement',
+				() => {
+					let volume = this.volumeTool.startInsertion(); 
+					volume.clip = true;
+					
+					let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
+					let jsonNode = measurementsRoot.children.find(child => child.data.uuid === volume.uuid);
 					$.jstree.reference(jsonNode.id).deselect_all();
 					$.jstree.reference(jsonNode.id).select_node(jsonNode.id);
 				}

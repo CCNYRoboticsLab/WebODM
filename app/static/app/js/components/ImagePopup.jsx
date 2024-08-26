@@ -76,7 +76,7 @@ class ImagePopup extends React.Component {
         const filenameWithoutExt = feature.properties.filename.split('.').slice(0, -1).join('.');
       
         // Construct crack detection link
-        const crackDetectionLink = `https://bayonneraw.boshang.online/index.html?image=${filenameWithoutExt}`;
+        const crackDetectionLink = `https://bayonneraw.boshang.online/?image=${filenameWithoutExt}`;
       
         return (
           <div className="image-popup">
