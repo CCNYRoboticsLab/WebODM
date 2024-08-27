@@ -32,8 +32,11 @@ def get_memory_stats():
 
 
 class Plugin(PluginBase):
+    def include_js_files(self):
+        return ['main.js']
+        
     def main_menu(self):
-        return [Menu(_("Diagnostic1"), self.public_url(""), "fa fa-chart-pie fa-fw")]
+        return [Menu(_("Crack Annotations"), self.public_url(""), "fa fa-chart-pie fa-fw")]
 
     def app_mount_points(self):
         @login_required
