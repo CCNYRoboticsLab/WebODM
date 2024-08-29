@@ -145,9 +145,16 @@ DATABASES = {
         'PASSWORD': os.environ.get('WO_DATABASE_PASSWORD', 'postgres'),
         'HOST': os.environ.get('WO_DATABASE_HOST', 'db'),
         'PORT': os.environ.get('WO_DATABASE_PORT', '5432'),
+    },
+    'mariadb': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sample',
+        'USER': 'phpMyAdmin',
+        'PASSWORD': 'roboticslab',
+        'HOST': '172.18.0.1',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

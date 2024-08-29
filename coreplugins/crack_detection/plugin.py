@@ -2,8 +2,12 @@ from app.plugins import PluginBase, Menu, MountPoint
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext as _
-
 import json, shutil
+from .models import PatchCrack
+
+def get_crack_data():
+    results = PatchCrack.objects.using('mariadb').all()
+    return list(results.values())
 
 def get_memory_stats():
     """
@@ -44,11 +48,15 @@ class Plugin(PluginBase):
             # Disk space
             total_disk_space, used_disk_space, free_disk_space = shutil.disk_usage('./')
 
+            # Get crack data
+            crack_data = PatchCrack.objects.using('mariadb').all()
+
             template_args = {
                 'title': 'Diagnostic1',
                 'total_disk_space': total_disk_space,
                 'used_disk_space': used_disk_space,
-                'free_disk_space': free_disk_space
+                'free_disk_space': free_disk_space,
+                'crack_data': crack_data  # Pass crack data to template
             }
 
             # Memory (Linux only)
