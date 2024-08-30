@@ -16,7 +16,7 @@ Including another URLconf
 import os
 
 from django.conf.urls import include, url
-from django.urls import re_path
+from django.urls import path, re_path
 from django.contrib import admin
 from . import settings
 from django.views.static import serve
@@ -63,3 +63,8 @@ if settings.DEBUG or settings.FORCE_MEDIA_STATICFILES:
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #urlpatterns += staticfiles_urlpatterns()
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

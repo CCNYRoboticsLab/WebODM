@@ -1,43 +1,30 @@
+import logging
+from django.http import HttpResponseServerError
 from app.plugins import PluginBase, Menu, MountPoint
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext as _
+# from django.views.generic import TemplateView
 import json, shutil
 from .models import PatchCrack
+from .utils import get_crack_data, get_memory_stats
+from .app_views import LoadButtonView
 
-def get_crack_data():
-    results = PatchCrack.objects.using('mariadb').all()
-    return list(results.values())
 
-def get_memory_stats():
-    """
-    Get node total memory and memory usage (Linux only)
-    https://stackoverflow.com/questions/17718449/determine-free-ram-in-python
-    """
-    try:
-        with open('/proc/meminfo', 'r') as mem:
-            ret = {}
-            tmp = 0
-            for i in mem:
-                sline = i.split()
-                if str(sline[0]) == 'MemTotal:':
-                    ret['total'] = int(sline[1])
-                elif str(sline[0]) in ('MemFree:', 'Buffers:', 'Cached:'):
-                    tmp += int(sline[1])
-            ret['free'] = tmp
-            ret['used'] = int(ret['total']) - int(ret['free'])
+logger = logging.getLogger(__name__)
 
-            ret['total'] *= 1024
-            ret['free'] *= 1024
-            ret['used'] *= 1024
-        return ret
-    except:
-        return {}
+
+# def get_crack_data():
+#     results = PatchCrack.objects.using('mariadb').all()
+#     return list(results.values())
+
+
+
 
 
 class Plugin(PluginBase):
     def include_js_files(self):
-        return ['main.js']
+        return ["main.js", "load_buttons.js"]
         
     def main_menu(self):
         return [Menu(_("Crack Annotations"), self.public_url(""), "fa fa-chart-pie fa-fw")]
@@ -69,7 +56,8 @@ class Plugin(PluginBase):
             return render(request, self.template_path("diagnostic1.html"), template_args)
 
         return [
-            MountPoint('$', diagnostic)
-        ]
+            MountPoint('$', diagnostic),
+            MountPoint("load_buttons.js$", LoadButtonView(self)),
+            ]
 
 

@@ -366,6 +366,11 @@ if DEBUG and not TESTING:
         }
     }
 
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    INTERNAL_IPS = ['127.0.0.1', '104.28.55.222', '45.79.141.198']
+
 # Number of minutes a processing node hasn't been seen 
 # before it should be considered offline
 NODE_OFFLINE_MINUTES = 5
