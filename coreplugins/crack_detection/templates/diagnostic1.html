@@ -3,7 +3,7 @@
 
 {% block content %}
 <script src="./Chart.min.js"></script>
-<h2>{% trans 'Diagnostic Information' %}_Bo</h2>
+{% comment %} <h2>{% trans 'Diagnostic Information' %}_Bo</h2>
 
 <div class="row text-center">
     <div class="col-md-4 col-sm-12">
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<hr/>
+<hr/> {% endcomment %}
 
 <h2>{% trans 'Crack Data' %}</h2>
 <div class="table-responsive">
@@ -42,6 +42,7 @@
                 <th>{% trans 'Box Length' %}</th>
                 <th>{% trans 'Box Width' %}</th>
                 <th>{% trans 'Box Height' %}</th>
+                <th>{% trans 'Length/Area' %}</th>
                 <th>{% trans 'Type' %}</th>
                 <th>{% trans 'LAS Link' %}</th>
                 <th>{% trans 'Whole Data ID' %}</th>
@@ -58,6 +59,7 @@
                 <td>{{ crack.box_length }}</td>
                 <td>{{ crack.box_width }}</td>
                 <td>{{ crack.box_height }}</td>
+                <td>{{ crack.length_area }}</td>
                 <td>{{ crack.type }}</td>
                 <td><a href="{{ crack.las_link }}" target="_blank">{% trans 'View' %}</a></td>
                 <td>{{ crack.whole_data_id }}</td>

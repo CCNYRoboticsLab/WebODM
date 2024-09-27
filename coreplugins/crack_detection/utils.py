@@ -2,8 +2,10 @@ from .models import PatchCrack
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 
-def get_crack_data():
-    results = PatchCrack.objects.using('mariadb').all()
+def get_crack_data(filters=None):
+    results = PatchCrack.objects.using('mariadb')
+    if filters:
+        results = results.filter(**filters)
     return [model_to_dict(result) for result in results]
 
 def get_memory_stats():

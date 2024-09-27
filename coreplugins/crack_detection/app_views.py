@@ -5,13 +5,12 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 def LoadButtonView(plugin):
-    @login_required
     def view(request):
         ds = plugin.get_user_data_store(request.user)
         token = ds.get_string("token")
 
         # Load data from the database
-        crack_data = get_crack_data()
+        crack_data = get_crack_data(filters={'whole_data_id': '-3'})
         memory_stats = get_memory_stats()
 
         return render(
