@@ -294,6 +294,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'app', 'templates', 'app'),
             BASE_DIR,
             MEDIA_ROOT,
+            os.path.join(BASE_DIR, 'coreplugins'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

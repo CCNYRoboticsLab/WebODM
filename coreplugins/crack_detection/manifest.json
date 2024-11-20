@@ -1,12 +1,12 @@
 {
-	"name": "Diagnostic1",
+	"name": "Crack Detection",
 	"webodmMinVersion": "0.6.2",
-	"description": "Display program version, memory and disk space usage statistics",
+	"description": "Plugin for detecting and analyzing cracks in drone imagery",
 	"version": "1.0.0",
-	"author": "Piero Toffanin",
-	"email": "pt@masseranolabs.com",
+	"author": "CCNY Robotics Lab",
+	"email": "info@opendronemap.org",
 	"repository": "https://github.com/OpenDroneMap/WebODM",
-	"tags": ["diagnostic"],
+	"tags": ["crack detection", "analysis", "imagery"],
 	"homepage": "https://github.com/OpenDroneMap/WebODM",
 	"experimental": false,
 	"deprecated": false

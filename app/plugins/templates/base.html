@@ -1,5 +1,12 @@
 {% extends "app/logged_in_base.html" %}
 
 {% block content %}
-Hello World! Override me.
+<div class="plugin-message">
+    {% block plugin_message %}
+    Hello World! Override me.
+    {% endblock %}
+</div>
+
+{% block plugin_content %}
+{% endblock %}
 {% endblock %}
