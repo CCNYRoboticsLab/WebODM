@@ -16,6 +16,7 @@ import datetime
 
 import tzlocal
 from django.contrib.messages import constants as messages
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -419,3 +420,18 @@ try:
     from .settings_override import *
 except ImportError:
     pass
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'WebODM <no-reply@example.com>'
+
+# Initialize environment variables
+env = environ.Env()
+environ.Env.read_env(env_file='.env')
+
+# Load sensitive credentials from environment variables
+EMAIL_HOST = env('EMAIL_HOST', default='localhost')
+EMAIL_PORT = env.int('EMAIL_PORT', default=25)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+# SECRET_KEY = env('SECRET_KEY')

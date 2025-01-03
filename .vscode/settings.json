@@ -1,0 +1,7 @@
+{
+  "prettier.disableLanguages": ["python"],
+  "editor.defaultFormatter": null, 
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  }
+}
