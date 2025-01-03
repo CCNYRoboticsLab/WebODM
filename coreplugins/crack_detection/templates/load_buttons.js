@@ -130,20 +130,28 @@ function toggleUploadPanel() {
 // Add InspectionNet button and panel
 function setupInspectionNet() {
     console.log("setupInspectionNet called");
+    
+    // Check if button already exists
+    if (document.querySelector('.inspection-net-button')) {
+        console.log("InspectionNet button already exists, skipping creation");
+        return;
+    }
+
     const addButton = document.querySelector(".add-button .btn.btn-primary.btn-sm");
     if (addButton) {
         console.log("Add button found, creating InspectionNet button");
         // Create InspectionNet button
         const inspectionButton = document.createElement("button");
-        inspectionButton.className = "upload-button btn btn-primary";
-        inspectionButton.textContent = "InspectionNet";
+        inspectionButton.className = "btn btn-primary btn-sm inspection-net-button"; // Added unique class
+        inspectionButton.innerHTML = `
+            <i class="fa fa-upload"></i> 
+            InspectionNet
+        `;
+        inspectionButton.style.marginRight = "10px";
         inspectionButton.onclick = toggleUploadPanel;
 
-        // Add button next to "+Add Project"
-        addButton.parentNode.insertBefore(
-            inspectionButton,
-            addButton.nextSibling
-        );
+        // Add button to the left of "+Add Project"
+        addButton.parentNode.insertBefore(inspectionButton, addButton);
         console.log("InspectionNet button added to DOM");
 
         // Create the upload panel with improved styling
@@ -160,10 +168,11 @@ function setupInspectionNet() {
             max-width: 1000px;
             height: 80vh;
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             z-index: 1001;
+            border: 1px solid #e0e0e0;
         `;
 
         // Add a semi-transparent overlay
@@ -184,8 +193,8 @@ function setupInspectionNet() {
             <div style="position: relative; height: 100%;">
                 <button class="close-panel btn btn-danger" style="
                     position: absolute;
-                    right: -10px;
-                    top: -10px;
+                    right: -15px;
+                    top: -15px;
                     border-radius: 50%;
                     width: 30px;
                     height: 30px;
@@ -194,10 +203,28 @@ function setupInspectionNet() {
                     text-align: center;
                     font-size: 20px;
                     z-index: 1002;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                    border: 2px solid #fff;
                 " onclick="toggleUploadPanel()">×</button>
-                <iframe src="https://laimatt.boshang.online/" 
-                    style="width: 100%; height: calc(100% - 10px); border: none; border-radius: 4px;"
-                ></iframe>
+                <div style="
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    height: 100%;
+                    border: 1px solid #dee2e6;
+                    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+                ">
+                    <iframe 
+                        src="https://laimatt.boshang.online/" 
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            border: none;
+                            border-radius: 4px;
+                            background: white;
+                        "
+                    ></iframe>
+                </div>
             </div>
         `;
 
